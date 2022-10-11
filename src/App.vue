@@ -1,0 +1,49 @@
+<template>
+  <v-app>
+    <v-app-bar app>
+      <v-icon v-if="$store.state.token" @click="drawer = !drawer" class="pr-3">
+        fas fa-list
+      </v-icon>
+      <v-toolbar-title> Mini Blogger</v-toolbar-title>
+      <v-spacer />
+      <v-btn v-if="!$store.state.token" text to="/login">Login</v-btn>
+      <v-btn v-if="!$store.state.token" text to="/register">Register</v-btn>
+      <v-btn v-if="$store.state.token" text @click="logout()">Logout</v-btn>
+    </v-app-bar>
+    <navigation-bar v-if="drawer && $store.state.token"></navigation-bar>
+    <v-main>
+      <router-view></router-view>
+    </v-main>
+  </v-app>
+</template>
+
+<script>
+import Home from "./components/Home.vue";
+import CreateBlog from "./components/CreateBlog";
+import NavigationBar from "./components/NavigationBar";
+
+export default {
+  name: "App",
+  components: {
+    Home,
+    CreateBlog,
+    NavigationBar,
+  },
+
+  data() {
+    return {
+      drawer: false,
+    };
+  },
+  methods: {
+    async logout() {
+      try {
+        this.$store.commit("logout");
+        if (!this.$store.state.token) this.$router.push("login");
+      } catch (err) {
+        console.error("Something went wrong", err);
+      }
+    },
+  },
+};
+</script>
