@@ -8,9 +8,10 @@ export const store = new Vuex.Store({
         blogs: [],
         token: localStorage.getItem("token") || '',
         user: {
-            name: null,
+            username: null,
             description: null
-        }
+        },
+        newBlog: {}
     },
 
     //only to modify state
@@ -18,8 +19,9 @@ export const store = new Vuex.Store({
         updateBlogs(state, blogs) {
             state.blogs = blogs
         },
-        newBlog(state, newBlog) {
-            state.blogs.push(newBlog)
+        newBlog(state, newBlogIn) {
+            state.blogs.push(newBlogIn)
+            state.newBlog = newBlogIn
         },
         auth(state, token) {
             state.token = token
@@ -29,33 +31,35 @@ export const store = new Vuex.Store({
             localStorage.clear('token')
         },
         user(state, userInfo) {
-            console.log("userInfo", userInfo)
             state.user = userInfo
         }
     },
 
     actions: {
         async getBlogs({ commit }) {
-            await axios.get("http://localhost:3000/blogs").then((res) => {
+            return await axios.get("http://localhost:3000/blogs").then((res) => {
                 commit("updateBlogs", res.data);
             });
         },
 
         async createBlog({ commit }, blogObject) {
+
+
             await axios
                 .post("http://localhost:3000/blogs", { blog: blogObject })
                 .then((res) => {
-                    commit('newBlog', res.data.details)
+                    commit('newBlog', res.data)
+                    console.log("Messgae", res.data);
+                    return res
                 });
         },
         async getBlog({ commit }, id) {
             return axios
-                .get(`http://localhost:3000/blogs/${id}`)
+                .get(`http://localhost:3000/blog/${id}`)
         },
         async registerUser({ commit }, userInfo) {
             let response = (await axios
                 .post("http://localhost:3000/register", userInfo)).data;
-            console.log(token);
             localStorage.setItem("token", response.token);
             axios.defaults.headers.common['Authorization'] = response.token
             commit("auth", response.token)
@@ -67,8 +71,11 @@ export const store = new Vuex.Store({
             localStorage.setItem("token", res.token);
             axios.defaults.headers.common['Authorization'] = res.token
             commit("auth", res.token)
-            console.log(res);
-            commit("user", { name: res.userName, description: res.description })
+
+            commit("user", { username: res.username, description: res.description })
         },
+    },
+    getters: {
+        isUserAuthenticated: state => !!state.token
     }
 })

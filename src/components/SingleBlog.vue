@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container fluid v-if="blogContent">
+    <v-container fluid v-if="blogContent && $store.getters.isUserAuthenticated">
       <h1>{{ blogContent.title }}</h1>
       <p class="text-justify text--secondary" v-if="blogContent.author">
         {{ blogContent.author }}
@@ -23,8 +23,7 @@ export default {
   async created() {
     this.blogContent = (
       await this.$store.dispatch("getBlog", this.$route.params.id)
-    ).data.details;
-    console.log("this", this.blogContent);
+    ).data;
   },
 };
 </script>

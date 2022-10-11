@@ -1,17 +1,29 @@
 <template>
   <div>
-    <!-- <v-list dense>
-      <v-list-item v-for="(blog, i) in $store.state.blogs" :key="i">
-        <v-list-item-content>
-          <v-list-item-title v-text="blog.title"></v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list> -->
+    <v-btn
+      depressed
+      class="ma-3"
+      v-if="
+        $store.state.token &&
+        $store.state.blogs.length > 0 &&
+        $store.state.user.username == 'Admin'
+      "
+      @click="deleteAll"
+      color="error"
+    >
+      DELETE ALL BLOGS
+    </v-btn>
+    <v-container v-if="$store.state.blogs.length === 0" class="fill-height">
+      <v-row class="d-flex justify-center red--text">
+        <h1>NO BLOGS</h1>
+      </v-row>
+    </v-container>
+
     <v-container fluid>
       <v-row dense>
         <v-col v-for="(blog, i) in $store.state.blogs" :key="i" cols="4">
-          <v-card
-            ><v-card-title v-text="blog.details.title"></v-card-title>
+          <v-card class="pa-md-4" color="#F7F6F4"
+            ><v-card-title v-text="blog.title"></v-card-title>
             <!-- <v-img
               :src="card.src"
               class="white--text align-end"
@@ -20,36 +32,43 @@
             >
               <v-card-title v-text="card.title"></v-card-title>
             </v-img> -->
-            <v-chip-group active-class="primary--text" column>
-              <v-chip v-for="(tag, i) in blog.details.tags" :key="i">
+            <v-chip-group class="ma-2" active-class="primary--text" column>
+              <v-chip v-for="(tag, i) in blog.tags" :key="i">
                 {{ tag }}
               </v-chip>
             </v-chip-group>
             <br />
-            <v-chip
-              class="ma-2"
-              color="orange"
-              outlined
-            >
-              {{ blog.details.author }}
+            <v-chip class="ma-2" color="cyan" outlined>
+              {{ blog.author }}
             </v-chip>
-            <v-card-actions>
-              <v-btn icon color="blue" :to="`blog/${i}`">Open</v-btn>
+            <v-card-actions class="ma-2">
+              <v-btn color="success" :to="`/blog/${blog.id}`">Open</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
       </v-row>
     </v-container>
   </div>
-  <!-- https://codesandbox.io/s/vuetify-drawer-forked-yd595k?file=/index.html:160-245 -->
 </template>
 
 
 <script>
+import axios from "axios";
 export default {
   name: "Home",
+  data() {
+    return {};
+  },
   async created() {
-    this.$store.dispatch("getBlogs");
+    await this.$store.dispatch("getBlogs");
+  },
+  methods: {
+    async deleteAll() {
+      await axios.delete("http://localhost:3000/blogs").then((res) => {
+        console.log("deleted");
+        location.reload();
+      });
+    },
   },
 };
 </script>

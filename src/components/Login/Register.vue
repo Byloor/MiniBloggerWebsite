@@ -29,16 +29,19 @@
                     required
                     :error-messages="errors"
                     :success="valid"
-                    v-model="userInfo.name"
+                    v-model="userInfo.username"
                   ></v-text-field>
                 </ValidationProvider>
               </v-col>
               <v-col cols="12">
                 <ValidationProvider name="Password" rules="required">
                   <v-text-field
+                  :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+                    @click:append="showPass = !showPass"
                     label="Password*"
                     slot-scope="{ errors, valid }"
                     required
+                    :type="showPass ? 'text' : 'password'"
                     :error-messages="errors"
                     :success="valid"
                     v-model="userInfo.password"
@@ -98,9 +101,10 @@ export default {
   data() {
     return {
       userInfo: {
-        name: "",
+        username: "",
         password: "",
       },
+      showPass: false,
     };
   },
   methods: {

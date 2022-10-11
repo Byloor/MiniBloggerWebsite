@@ -2,19 +2,16 @@
   <div>
     <v-col cols="12">
       <v-img
-        :src="require('../assets/mb.jpeg')"
-        class="my-3"
+        :src="require('../assets/mb-small.png')"
+        class="mt-12"
         contain
-        height="100"
+        height="50"
       />
     </v-col>
     <ValidationObserver ref="observer">
       <v-card class="flexcard" height="100%" flat slot-scope="{ invalid }">
-        <v-card-title class="d-flex justify-center mb-12">
-          <v-toolbar flat>
-            <v-toolbar-title>Create your own Blog</v-toolbar-title>
-            <v-spacer></v-spacer>
-          </v-toolbar>
+        <v-card-title class="text-uppercase d-flex justify-center mb-6">
+          Create your own Blog
         </v-card-title>
         <v-card-text>
           <v-form>
@@ -139,7 +136,7 @@
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="clear"> Reset </v-btn>
           <v-btn color="blue darken-1" :disabled="invalid" text @click="submit">
-            Save
+            Publish
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -183,7 +180,7 @@ export default {
     blogObject: {
       content: "",
       tags: [],
-      images: [],
+      //images: [],
       title: "",
       summary: "",
       author: null,
@@ -204,10 +201,13 @@ export default {
       try {
         await this.$refs.observer.validate();
         this.blogObject.author = this.blogObject.author || "Anonymous";
-        this.$store.dispatch("createBlog", this.blogObject);
+        await this.$store.dispatch("createBlog", this.blogObject);
         this.clear();
         this.snackbar = true;
         this.snackbarText = "Congratulations! Your blog is online";
+        if (this.$store.state.newBlog) {
+          this.$router.push(`/blog/${this.$store.state.newBlog.id}`);
+        }
       } catch (err) {
         console.error("Something went wrong", err);
         this.snackbar = true;

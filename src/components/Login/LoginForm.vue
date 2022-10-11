@@ -27,16 +27,19 @@
                     required
                     :error-messages="errors"
                     :success="valid"
-                    v-model="userInfo.name"
+                    v-model="userInfo.username"
                   ></v-text-field>
                 </ValidationProvider>
               </v-col>
               <v-col cols="12">
                 <ValidationProvider name="Title" rules="required">
                   <v-text-field
+                    :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+                    @click:append="showPass = !showPass"
                     label="Password*"
                     slot-scope="{ errors, valid }"
                     required
+                    :type="showPass ? 'text' : 'password'"
                     :error-messages="errors"
                     :success="valid"
                     v-model="userInfo.password"
@@ -79,9 +82,10 @@ export default {
   data() {
     return {
       userInfo: {
-        name: "",
+        username: "",
         password: "",
       },
+      showPass: false,
     };
   },
   methods: {
@@ -89,7 +93,7 @@ export default {
       try {
         await this.$refs.observer.validate();
         this.$store.dispatch("loginUser", this.userInfo).then((res) => {
-          if (this.$store.state.token) this.$router.push("Home");
+          if (this.$store.state.token) this.$router.push("/home");
         });
       } catch (err) {
         console.error("Something went wrong", err);
