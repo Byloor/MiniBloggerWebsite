@@ -20,6 +20,7 @@ app.get("/blogs/:userid", blogcontroller.getAll);
 app.post("/blogs", blogcontroller.create);
 app.delete("/blogs", [verifyService.isUserAdmin], blogcontroller.deleteAll);
 app.delete("/blog/:id", blogcontroller.deleteBlogById);
+app.put("/blog/:id", blogcontroller.updateBlogById);
 app.delete("/blogs/:userid", blogcontroller.deleteAll);
 
 const router = app;
