@@ -3,14 +3,13 @@ import Vuex from "vuex"
 import axios from "axios";
 
 Vue.use(Vuex);
+const user = localStorage.getItem('user');
 export const store = new Vuex.Store({
     state: {
         blogs: [],
+        currentUserBlogs: [],
         token: localStorage.getItem("token") || '',
-        user: {
-            username: null,
-            description: null
-        },
+        user: user || null,
         newBlog: {}
     },
 
@@ -19,16 +18,28 @@ export const store = new Vuex.Store({
         updateBlogs(state, blogs) {
             state.blogs = blogs
         },
+        updateCurrentUserBlogs(state, currentUserBlogs) {
+            state.currentUserBlogs = currentUserBlogs
+        },
         newBlog(state, newBlogIn) {
             state.blogs.push(newBlogIn)
             state.newBlog = newBlogIn
+        },
+        deleteBlog(state, blogId) {
+            const blogtobedeleted = state.blogs.findIndex(blog => {
+                return blog.id === blogId;
+            });
+            state.blogs.splice(blogtobedeleted, 1)
+            state.currentUserBlogs.splice(blogtobedeleted, 1)
         },
         auth(state, token) {
             state.token = token
         },
         logout(state) {
-            state.token = ''
+            state.token = '',
+                state.user = null
             localStorage.clear('token')
+            localStorage.clear('user')
         },
         user(state, userInfo) {
             state.user = userInfo
@@ -43,20 +54,29 @@ export const store = new Vuex.Store({
         },
 
         async createBlog({ commit }, blogObject) {
-
-
             await axios
                 .post("http://localhost:3000/blogs", { blog: blogObject })
                 .then((res) => {
                     commit('newBlog', res.data)
-                    console.log("Messgae", res.data);
                     return res
                 });
         },
+        async getBlogsByUserid({ commit }, userid) {
+            if (!userid) {
+                console.error("userid is null")
+                return;
+            }
+
+            return await axios.get(`http://localhost:3000/blogs/${userid}`).then((res) => {
+                commit("updateCurrentUserBlogs", res.data);
+            });
+        },
+
         async getBlog({ commit }, id) {
             return axios
                 .get(`http://localhost:3000/blog/${id}`)
         },
+
         async registerUser({ commit }, userInfo) {
             let response = (await axios
                 .post("http://localhost:3000/register", userInfo)).data;
@@ -69,13 +89,17 @@ export const store = new Vuex.Store({
             let res = (await axios
                 .post("http://localhost:3000/login", userInfo)).data;
             localStorage.setItem("token", res.token);
+            localStorage.setItem("user", userInfo);
             axios.defaults.headers.common['Authorization'] = res.token
             commit("auth", res.token)
 
-            commit("user", { username: res.username, description: res.description })
+            commit("user", { id: res.id, username: res.username, description: res.description })
         },
     },
     getters: {
-        isUserAuthenticated: state => !!state.token
+        isUserAuthenticated: state => {
+            const userExist = state.user ? !!state.user.id : !!state.user;
+            return !!state.token && userExist
+        }
     }
 })

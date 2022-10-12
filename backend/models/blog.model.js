@@ -1,6 +1,10 @@
 import { model, Schema } from "mongoose";
 
 const schema = new Schema({
+    userid: {
+        type: String,
+        required: true
+    },
     title: {
         type: String,
         required: true

@@ -9,14 +9,14 @@
       />
     </v-col>
     <ValidationObserver ref="observer">
-      <v-card class="flexcard" height="100%" slot-scope="{ invalid }">
-        <v-card-title class="d-flex justify-center mb-12">
-          <v-toolbar flat>
-            <v-toolbar-title>
-              Welcome! Please Register with your user name</v-toolbar-title
-            >
-            <v-spacer></v-spacer>
-          </v-toolbar>
+      <v-card
+        color="#F7F6F4"
+        class="flexcard"
+        height="100%"
+        slot-scope="{ invalid }"
+      >
+        <v-card-title class="d-flex justify-center ma-4">
+          Welcome! Please Register with your user name
         </v-card-title>
         <v-card-text>
           <v-form>
@@ -24,7 +24,7 @@
               <v-col cols="12">
                 <ValidationProvider name="Name" rules="required">
                   <v-text-field
-                    label="Name*"
+                    label="UserName*"
                     slot-scope="{ errors, valid }"
                     required
                     :error-messages="errors"
@@ -36,7 +36,7 @@
               <v-col cols="12">
                 <ValidationProvider name="Password" rules="required">
                   <v-text-field
-                  :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+                    :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
                     @click:append="showPass = !showPass"
                     label="Password*"
                     slot-scope="{ errors, valid }"
@@ -65,17 +65,25 @@
           </v-form>
         </v-card-text>
         <v-card-actions>
+          <v-spacer />
           <v-btn
-            color="blue darken-1"
-            :disabled="invalid"
-            text
+            class="ma-2"
+            :color="invalid ? 'error' : 'success'"
             @click="register"
           >
-            Register
+            Create account
           </v-btn>
         </v-card-actions>
       </v-card>
     </ValidationObserver>
+    <v-snackbar v-model="snackbar">
+      {{ snackbarText }}
+      <template v-slot:action="{ attrs }">
+        <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -105,16 +113,21 @@ export default {
         password: "",
       },
       showPass: false,
+      snackbar: false,
+      snackbarText: "",
     };
   },
   methods: {
     async register() {
+      if (this.invalid) return;
       try {
         await this.$refs.observer.validate();
-        this.$store.dispatch("registerUser", this.userInfo);
+        await this.$store.dispatch("registerUser", this.userInfo);
         this.$router.push("Login");
       } catch (err) {
         console.error("Something went wrong", err);
+        this.snackbar = true;
+        this.snackbarText = "Oops! Please provide a different username";
       }
     },
   },

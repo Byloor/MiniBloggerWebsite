@@ -16,8 +16,11 @@ app.post("/login", authcontroller.login);
 app.get("/blogs", blogcontroller.getAll);
 
 app.get("/blog/:id", blogcontroller.getBlogById);
+app.get("/blogs/:userid", blogcontroller.getAll);
 app.post("/blogs", blogcontroller.create);
-app.delete("/blogs", [verifyService.isUserAdmin], blogcontroller.DelAllByAdmin);
+app.delete("/blogs", [verifyService.isUserAdmin], blogcontroller.deleteAll);
+app.delete("/blog/:id", blogcontroller.deleteBlogById);
+app.delete("/blogs/:userid", blogcontroller.deleteAll);
 
 const router = app;
 export default router;

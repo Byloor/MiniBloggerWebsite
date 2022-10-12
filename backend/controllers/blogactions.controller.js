@@ -3,7 +3,9 @@ const Blog = db.blog;
 
 // Get all Blogs from the database.
 const getAll = (req, res) => {
-    Blog.find({})
+    const userid = req.params.userid;
+    var condition = userid ? { userid: { $regex: new RegExp(userid), $options: "i" } } : {};
+    Blog.find(condition)
         .then(data => {
             res.send(data);
         })
@@ -28,7 +30,8 @@ const create = (req, res) => {
         content: newBlog.content,
         tags: newBlog.tags,
         summary: newBlog.summary,
-        author: newBlog.author
+        author: newBlog.author,
+        userid: newBlog.userid
     });
 
     blog.save(blog)
@@ -40,8 +43,6 @@ const create = (req, res) => {
 // Delete blog with id
 const deleteBlogById = (req, res) => {
     const id = req.params.id;
-
-    console.log("Am i gere", id)
     Blog.findByIdAndRemove(id).then(data => {
         if (!data) {
             res.status(404).send({
@@ -49,6 +50,7 @@ const deleteBlogById = (req, res) => {
             });
         } else {
             res.send({
+                id,
                 message: "Blog deleted successfully"
             });
         }
@@ -76,20 +78,11 @@ const getBlogById = (req, res) => {
     })
 }
 
-
-//Get all blogs with user
-const getAllByUser = (req, res) => {
-
-};
-
 //delete all blogs if user is admin
-const DelAllByUser = (req, res) => {
-
-};
-
-//delete all blogs if user is admin
-const DelAllByAdmin = (req, res) => {
-    Blog.deleteMany({})
+const deleteAll = (req, res) => {
+    const userid = req.params.userid;
+    var condition = userid ? { userid: { $regex: new RegExp(userid), $options: "i" } } : {};
+    Blog.deleteMany(condition)
         .then(data => {
             res.send({
                 message: `${data.deletedCount} All Blogs are deleted successfully by admin!`
@@ -105,7 +98,6 @@ const DelAllByAdmin = (req, res) => {
 
 const blogcontroller = {
     create, getAll, getBlogById,
-    DelAllByAdmin, deleteBlogById,
-    DelAllByUser, getAllByUser
+    deleteAll, deleteBlogById
 }
 export default blogcontroller;

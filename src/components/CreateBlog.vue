@@ -184,6 +184,7 @@ export default {
       title: "",
       summary: "",
       author: null,
+      userid: "",
     },
     snackbar: false,
     snackbarText: "",
@@ -201,6 +202,9 @@ export default {
       try {
         await this.$refs.observer.validate();
         this.blogObject.author = this.blogObject.author || "Anonymous";
+        this.blogObject.userid = this.$store.state.user
+          ? this.$store.state.user.id
+          : null;
         await this.$store.dispatch("createBlog", this.blogObject);
         this.clear();
         this.snackbar = true;

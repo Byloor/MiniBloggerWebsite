@@ -9,12 +9,14 @@
       />
     </v-col>
     <ValidationObserver ref="observer">
-      <v-card class="flexcard" height="100%" slot-scope="{ invalid }">
-        <v-card-title class="d-flex justify-center mb-12">
-          <v-toolbar flat>
-            <v-toolbar-title> Welcome! Please Login </v-toolbar-title>
-            <v-spacer></v-spacer>
-          </v-toolbar>
+      <v-card
+        color="#F7F6F4"
+        class="flexcard"
+        height="100%"
+        slot-scope="{ invalid }"
+      >
+              <v-card-title class="d-flex justify-center ma-4">
+          Welcome! Please Login
         </v-card-title>
         <v-card-text>
           <v-form>
@@ -22,7 +24,7 @@
               <v-col cols="12">
                 <ValidationProvider name="Name" rules="required">
                   <v-text-field
-                    label="Name*"
+                    label="UserName*"
                     slot-scope="{ errors, valid }"
                     required
                     :error-messages="errors"
@@ -51,8 +53,13 @@
           </v-form>
         </v-card-text>
         <v-card-actions>
-          <v-btn color="blue darken-1" :disabled="invalid" text @click="login">
-            Login
+          <v-spacer />
+          <v-btn
+            class="ma-2"
+            :color="invalid ? 'error' : 'success'"
+            @click="login"
+          >
+            Login to your account
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -90,6 +97,8 @@ export default {
   },
   methods: {
     async login() {
+      if (this.invalid) return;
+
       try {
         await this.$refs.observer.validate();
         this.$store.dispatch("loginUser", this.userInfo).then((res) => {

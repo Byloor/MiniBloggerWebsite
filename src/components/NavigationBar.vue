@@ -1,12 +1,22 @@
 <template>
   <div>
-    <v-navigation-drawer primary app fixed absolute permanent>
+    <v-navigation-drawer
+      height="100%"
+      v-model="drawer"
+      primary
+      app
+      fixed
+      absolute
+    >
       <v-list dense nav class="py-0">
         <v-list-item two-line class="px-0">
           <v-list-item-content>
             <v-list-item-title>
+              <h1 class="py-4">
+                Welcome Blogger! <v-icon color="red"> fas fa-heart </v-icon>
+              </h1>
               <h1>
-                Welcome {{ $store.state.user.username }}
+                {{ $store.state.user.username }}
               </h1></v-list-item-title
             >
             <v-spacer /><v-spacer />
@@ -47,11 +57,16 @@ export default {
   data() {
     return {
       arrayBlogs: [],
-      mini: true,
+      mini: false,
       items: [
-        { title: "Home", icon: "mdi-view-dashboard", path: "/home" },
-        { title: "Create Blog", icon: "mdi-image", path: "/create-blog" },
-        // { title: "My Blogs", icon: "mdi-help-box", path: "/my-blogs" },
+        {
+          title: "Dash Board",
+          color: "green",
+          icon: "mdi-home-modern",
+          path: "/home",
+        },
+        { title: "Create Blog", icon: "mdi-pencil", path: "/create-blog" },
+        { title: "My Blogs", icon: "mdi-clipboard-text", path: "/my-blogs" },
       ],
     };
   },
