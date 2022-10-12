@@ -58,6 +58,16 @@ const routes = [
     beforeEnter: ifUserAuthenticated
   },
   {
+    path: "/update-blog/:id",
+    name: "CreateBlog",
+    components: {
+      default: () => import("../src/components/CreateBlog.vue"),
+      sidebar: () => import("../src/components/NavigationBar.vue")
+    },
+    props: true,
+    beforeEnter: ifUserAuthenticated
+  },
+  {
     path: "/my-blogs",
     name: "MyBlogs",
     components: {

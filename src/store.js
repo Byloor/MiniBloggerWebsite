@@ -61,6 +61,14 @@ export const store = new Vuex.Store({
                     return res
                 });
         },
+        async updateBlog({ commit }, blogObject) {
+            console.log( blogObject)
+            await axios
+                .put(`http://localhost:3000/blog/${blogObject.id}`, blogObject)
+                .then((res) => {
+                    return res
+                });
+        },
         async getBlogsByUserid({ commit }, userid) {
             if (!userid) {
                 console.error("userid is null")

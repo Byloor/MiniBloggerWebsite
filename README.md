@@ -6,7 +6,7 @@ npm install
 npm start
 ```
 
-frontend is served at localhost:8080 if available -> url opens login page of MiniBlogger website
+frontend is served at localhost:8080 or 8081 if available -> url opens login page of MiniBlogger website
 ### Lints and fixes files
 ```
 npm run lint
@@ -44,6 +44,11 @@ If you would like to register a new account,
 1. navigate to the register page via Register at top right corner
 2. Register with new username and password. (do not repeat usernames)
 
+After loggging in with your credentials,
+User is navigated to Dashboard section where all of the blogs created by users are visible. 
+If you are logging in for first time, no blogs are present -> Go to create blog section where you will be able to create a blog and publish it with your name or as anonymously.
+
+In My blogs section, user can only see their blogs and perform deletion actions and update action.
 
 
 

@@ -152,7 +152,6 @@
   </div>
 </template>
 
-
 <script>
 import { required, max } from "vee-validate/dist/rules.umd";
 import {
@@ -177,6 +176,7 @@ export default {
     ValidationObserver,
   },
   data: () => ({
+    blogId: "",
     blogObject: {
       content: "",
       tags: [],
@@ -189,30 +189,44 @@ export default {
     snackbar: false,
     snackbarText: "",
   }),
-  computed: {
-    isSaveButtonDisabled() {
-      // loop over all contents of the fields object and check if they exist and valid.
-      return Object.keys(this.addTool).every((field) => {
-        return this.addTool[field] && this.addTool[field].valid;
-      });
-    },
+  async mounted() {
+    this.blogId = this.$route.params.id;
+    if(this.blogId) {
+      this.blogToBeUpdated = (
+      await this.$store.dispatch("getBlog", this.blogId)).data;
+      this.blogObject = this.blogToBeUpdated 
+    }
   },
   methods: {
     async submit() {
       try {
         await this.$refs.observer.validate();
         this.blogObject.author = this.blogObject.author || "Anonymous";
-        this.blogObject.userid = this.$store.state.user
+        if (!this.blogId) {
+          this.blogObject.userid = this.$store.state.user
           ? this.$store.state.user.id
           : null;
-        await this.$store.dispatch("createBlog", this.blogObject);
-        this.clear();
-        this.snackbar = true;
-        this.snackbarText = "Congratulations! Your blog is online";
-        if (this.$store.state.newBlog) {
-          this.$router.push(`/blog/${this.$store.state.newBlog.id}`);
+          
+          await this.$store.dispatch("createBlog", this.blogObject);
+          this.clear();
+          this.snackbar = true;
+          this.snackbarText = "Congratulations! Your blog is online";
+          if (this.$store.state.newBlog) {
+            this.$router.push(`/blog/${this.$store.state.newBlog.id}`);
+          }
+        } else {      
+          if (this.blogToBeUpdated) {
+            await this.$store.dispatch("updateBlog", this.blogToBeUpdated).then((res) => {
+              console.log(res);
+            });
+
+            this.snackbar = true;
+            this.snackbarText = "Your blog is updated";
+
+            this.$router.push(`/blog/${this.blogId}`);
+
         }
-      } catch (err) {
+      }} catch (err) {
         console.error("Something went wrong", err);
         this.snackbar = true;
         this.snackbarText = "Oops! Something went wrong";

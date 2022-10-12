@@ -1,8 +1,8 @@
 <template>
   <div>
     <v-container v-if="$store.state.blogs.length === 0" class="fill-height">
-      <v-row class="d-flex pa-12 justify-center green--text">
-        <h1>NO BLOGS! please your first blog via createBlog section</h1>
+      <v-row class="d-flex pa-12 justify-center">
+        <h1>Nice to see you! Please create your first blog via create Blog section.</h1>
       </v-row>
     </v-container>
 
@@ -60,8 +60,7 @@ export default {
     async deleteAll() {
       await axios
         .delete("http://localhost:3000/blogs")
-        .then((res) => {
-          console.log("deleted", res);
+        .then(() => {
           this.$store.commit("updateBlogs", []);
         })
         .catch((err) => console.error("Could not delete all blogs", err));

@@ -4,8 +4,11 @@
       v-if="$store.state.currentUserBlogs.length === 0"
       class="fill-height"
     >
-      <v-row class="d-flex pa-12 justify-center green--text">
-        <h1>NO BLOGS! please your first blog via createBlog section</h1>
+      <v-row class="d-flex pa-12 justify-center">
+        <h1>
+          Nice to see you! Please create your first blog via create Blog
+          section.
+        </h1>
       </v-row>
     </v-container>
 
@@ -36,7 +39,10 @@
             <v-chip class="ma-2" color="cyan" outlined>
               Published by: {{ blog.author }}
             </v-chip>
-            <v-card-actions class="ma-2">
+            <v-card-actions class="my-2">
+              <v-btn text :to="`/update-blog/${blog.id}`">
+                <v-icon class="px-2"> mdi-pencil </v-icon> Edit</v-btn
+              >
               <v-spacer />
               <v-btn text color="error" @click="deleteById(blog.id)"
                 >Delete</v-btn
@@ -62,7 +68,6 @@
     </v-btn>
   </div>
 </template>
-
 
 <script>
 import axios from "axios";
@@ -100,7 +105,7 @@ export default {
           console.log(res.data.message);
         })
         .catch((err) => console.error("Deletion failed", err));
-    },
+    }
   },
 };
 </script>

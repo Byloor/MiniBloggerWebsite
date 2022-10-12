@@ -7,13 +7,13 @@
       </h5>
       <br />
       <br />
-      <p class="text-justify font-weight-italic">
+      <div class="text-justify font-weight-italic">
         <h3>Summary: </h3>  {{ blogContent.summary }}
-      </p>
-      <p class="text-justify">
+      </div>
+      <div class="text-justify">
         <h3>Content: </h3>
         {{ blogContent.content }}
-      </p>
+      </div>
     </v-container>
   </div>
 </template>
@@ -21,7 +21,7 @@
 
 <script>
 export default {
-  name: "Blog",
+  name: "SingleBlog",
   data() {
     return {
       blogContent: null,
