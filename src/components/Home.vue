@@ -13,12 +13,12 @@
             ><v-card-title v-text="blog.title"></v-card-title>
             <v-chip-group class="ma-2" active-class="primary--text" column>
               <v-chip v-for="(tag, i) in blog.tags" :key="i">
-                {{ tag }}
+                category: {{ tag }}
               </v-chip>
             </v-chip-group>
             <br />
             <v-chip class="ma-2" color="cyan" outlined>
-              {{ blog.author }}
+              Published by: {{ blog.author }}
             </v-chip>
             <v-card-actions class="ma-2">
               <v-spacer />

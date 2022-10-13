@@ -53,7 +53,6 @@ const updateBlogById = (req, res) => {
     });
   }
   const id = req.params.id;
-  console.log("here", req.body, id, req.body.blog)
   Blog.findByIdAndUpdate(id, req.body)
     .then((data) => {
       if (!data) {

@@ -37,7 +37,7 @@
             </v-chip-group>
             <br />
             <v-chip class="ma-2" color="cyan" outlined>
-              Published by: {{ blog.author }}
+              Published by you as: {{ blog.author }}
             </v-chip>
             <v-card-actions class="my-2">
               <v-btn text :to="`/update-blog/${blog.id}`">
