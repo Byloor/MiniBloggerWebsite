@@ -11,7 +11,7 @@
     <ValidationObserver ref="observer">
       <v-card class="flexcard" height="100%" flat slot-scope="{ invalid }">
         <v-card-title class="text-uppercase d-flex justify-center mb-6">
-          Create your own Blog
+          {{blogId ? "Update your Blog" : "Create your own Blog"}}
         </v-card-title>
         <v-card-text>
           <v-form>
@@ -136,7 +136,7 @@
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="clear"> Reset </v-btn>
           <v-btn color="blue darken-1" :disabled="invalid" text @click="submit">
-            Publish
+            {{blogId ? "Re-publish" : "Publish"}}
           </v-btn>
         </v-card-actions>
       </v-card>
